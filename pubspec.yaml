@@ -1,0 +1,37 @@
+name: sahayak_ui
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  animated_splash_screen: ^1.3.0
+  flutter_riverpod: ^3.0.0
+  http: ^1.5.0
+  google_generative_ai: ^0.4.3 
+  flutter_dotenv: ^5.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - lib/assets/images/
+
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: lib/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf
+          weight: 500
+    - family: LibreBaskerville
+      fonts:
+        - asset: lib/assets/fonts/Libre_Baskerville/LibreBaskerville-Italic.ttf
+          weight: 400
