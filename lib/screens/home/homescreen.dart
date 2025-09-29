@@ -291,9 +291,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           if (!textAnalysisState.isConfigured) ...[
                             const SizedBox(height: 8),
                             const Text(
-                              'Please configure your Gemini API key in lib/services/gemini_service.dart',
+                              'Please add your Gemini API key to use AI analysis features',
                               style: TextStyle(fontSize: 12, color: Colors.grey),
                               textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Switch to local analysis
+                                setState(() {
+                                  _useGeminiAnalysis = false;
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF7846EC),
+                              ),
+                              child: const Text(
+                                'Use Local Analysis',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ],
                         ],

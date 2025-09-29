@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sahayak_ui/models/keyword_highlight.dart';
 
@@ -45,15 +46,28 @@ class HighlightedTextWidget extends StatelessWidget {
         ));
       }
 
-      // Add highlighted text
+      // Add highlighted text with tap gesture
       spans.add(TextSpan(
         text: highlight.keyword,
         style: highlightStyle ?? TextStyle(
           backgroundColor: highlightColor.withOpacity(0.3),
           fontWeight: FontWeight.bold,
           color: Theme.of(context).primaryColor,
+          decoration: TextDecoration.underline,
         ),
-        recognizer: _createGestureRecognizer(highlight),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            if (onKeywordTap != null) {
+              onKeywordTap!(highlight.keyword, highlight.definition);
+            } else {
+              // Default behavior - show popup
+              KeywordDefinitionPopup.show(
+                context, 
+                highlight.keyword, 
+                highlight.definition
+              );
+            }
+          },
       ));
 
       currentIndex = highlight.endIndex;
@@ -68,11 +82,6 @@ class HighlightedTextWidget extends StatelessWidget {
     }
 
     return TextSpan(children: spans);
-  }
-
-  /// Creates gesture recognizer for keyword interactions
-  dynamic _createGestureRecognizer(KeywordHighlight highlight) {
-    return null; // Will be implemented with proper gesture recognizer
   }
 }
 

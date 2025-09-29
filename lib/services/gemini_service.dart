@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class GeminiService {
   static const String _baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-  static final String _apiKey = 'AIzaSyAYd6BN1yzeQAf_3cWPsWrFxsfEc3wxP5Q';
+  static const String _apiKey = 'YOUR_GEMINI_API_KEY_HERE'; // Replace with your actual API key
   
   /// Analyzes text and extracts important keywords
   Future<List<String>> extractKeywords(String text) async {
