@@ -5,6 +5,7 @@ import 'package:sahayak_ui/models/keyword_highlight.dart';
 import 'package:sahayak_ui/providers/ai_provider.dart';
 import 'package:sahayak_ui/providers/text_analysis_provider.dart';
 import 'package:sahayak_ui/widgets/highlighted_text_widget.dart';
+import 'package:sahayak_ui/services/camera_service.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -52,6 +53,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       } finally {
         ref.read(isLoadingProvider.notifier).state = false;
       }
+    }
+  }
+
+  Future<void> _captureImage() async {
+    try {
+      if (!CameraService.isSupported) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Camera is not supported on this platform'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        return;
+      }
+
+      final hasPermission = await CameraService.requestPermissions();
+      if (!hasPermission) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Camera permission is required'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      final imagePath = await CameraService.captureImage();
+      if (imagePath != null) {
+        // Process the captured image for text extraction
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Image captured! Text extraction feature coming soon.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Camera feature is not fully implemented yet'),
+            backgroundColor: Colors.blue,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -261,6 +312,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   ],
                                 ),
                         ),
+                        const SizedBox(height: 10),
+                        // Camera button
+                        ElevatedButton.icon(
+                          onPressed: _captureImage,
+                          icon: const Icon(Icons.camera_alt, color: Colors.white),
+                          label: const Text(
+                            'Capture Text',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF3CF8D5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -291,25 +362,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           if (!textAnalysisState.isConfigured) ...[
                             const SizedBox(height: 8),
                             const Text(
-                              'Please add your Gemini API key to use AI analysis features',
+                              'Please configure your Gemini API key in lib/services/gemini_service.dart',
                               style: TextStyle(fontSize: 12, color: Colors.grey),
                               textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 8),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Switch to local analysis
-                                setState(() {
-                                  _useGeminiAnalysis = false;
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF7846EC),
-                              ),
-                              child: const Text(
-                                'Use Local Analysis',
-                                style: TextStyle(color: Colors.white),
-                              ),
                             ),
                           ],
                         ],
